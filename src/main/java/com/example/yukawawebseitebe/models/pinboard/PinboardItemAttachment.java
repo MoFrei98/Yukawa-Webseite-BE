@@ -16,7 +16,7 @@ public class PinboardItemAttachment {
     private PinboardItem pinboardItem;
 
     @Column(name = "type")
-    private String type;
+    private PinboardItemAttachmentType type;
 
     @Column(name = "path")
     private String path;
