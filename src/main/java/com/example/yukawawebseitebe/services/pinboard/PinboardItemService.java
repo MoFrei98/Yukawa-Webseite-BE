@@ -5,6 +5,8 @@ import com.example.yukawawebseitebe.repositories.pinboard.PinboardItemRepository
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,7 +25,7 @@ public class PinboardItemService {
     }
 
     public PinboardItem savePinboardItem(PinboardItem item) {
-        //item.setCreatedAt();
+        item.setCreatedAt(LocalDateTime.now());
         item.setCreatedBy("test");
         return pinboardItemRepository.saveAndFlush(item);
     }
@@ -34,7 +36,7 @@ public class PinboardItemService {
             PinboardItem pinboardItem = optionalItem.get();
             pinboardItem.setTitle(item.getTitle());
             pinboardItem.setText(item.getText());
-            //pinboardItem.setEditedAt();
+            pinboardItem.setEditedAt(LocalDateTime.now());
             pinboardItem.setEditedBy("test");
             return pinboardItemRepository.saveAndFlush(pinboardItem);
         } else
