@@ -42,4 +42,8 @@ public class PinboardItemAttatchmentService {
         pinboardItemAttatchmentRepository.findById(uuid);
         return pinboardItemAttatchmentRepository.findById(uuid).isEmpty();
     }
+
+    public List<PinboardItemAttachment> getPinboardItemAttatchmentsByItemId(String uuid) {
+        return pinboardItemAttatchmentRepository.findByPinboardItemUuid(uuid);
+    }
 }

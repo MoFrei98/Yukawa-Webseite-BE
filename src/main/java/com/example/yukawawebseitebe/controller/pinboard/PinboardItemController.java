@@ -1,6 +1,8 @@
 package com.example.yukawawebseitebe.controller.pinboard;
 
 import com.example.yukawawebseitebe.models.pinboard.PinboardItem;
+import com.example.yukawawebseitebe.models.pinboard.PinboardItemAttachment;
+import com.example.yukawawebseitebe.services.pinboard.PinboardItemAttatchmentService;
 import com.example.yukawawebseitebe.services.pinboard.PinboardItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,9 @@ public class PinboardItemController {
 
     @Autowired
     private PinboardItemService pinboardItemService;
+
+    @Autowired
+    PinboardItemAttatchmentService pinboardItemAttatchmentService;
 
     @GetMapping("get-all")
     public List<PinboardItem> getAllPinboardItems() {
@@ -40,7 +45,9 @@ public class PinboardItemController {
 
     @DeleteMapping("delete/{uuid}")
     public ResponseEntity<String> deletePinboardItem(@PathVariable String uuid) {
-        boolean deleted = pinboardItemService.deletePinboardItem(uuid);
+        boolean deleted = false;
+        List<PinboardItemAttachment> attachments = pinboardItemAttatchmentService.getAllPinboardItemAttatchments();
+        deleted = pinboardItemService.deletePinboardItem(uuid);
         if (deleted) {
             return ResponseEntity.ok("Pinboard-Item " + uuid + " deleted successfully.");
         } else {

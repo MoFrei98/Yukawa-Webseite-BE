@@ -23,9 +23,20 @@ public class PinboardItemAttatchmentController {
     }
 
     @GetMapping("get/{uuid}")
-    public ResponseEntity<PinboardItemAttachment> getPinboardItemAttatchmentById(String uuid){
+    public ResponseEntity<PinboardItemAttachment> getPinboardItemAttatchmentById(@PathVariable(name = "uuid")String uuid){
         Optional<PinboardItemAttachment> item = pinboardItemAttatchmentService.getPinboardItemAttatchmentById(uuid);
         return item.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("get/item/{uuid}")
+    public List<PinboardItemAttachment> getPinboardItemAttatchmentByItemId(@PathVariable(name = "uuid") String uuid){
+        List<PinboardItemAttachment> items = null;
+        try {
+            items = pinboardItemAttatchmentService.getPinboardItemAttatchmentsByItemId(uuid);
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+        return items;
     }
 
     @PostMapping("create")
