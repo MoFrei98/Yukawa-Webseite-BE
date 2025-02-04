@@ -3,6 +3,7 @@ package com.example.yukawawebseitebe.controller.pinboard;
 import com.example.yukawawebseitebe.models.pinboard.PinboardItem;
 import com.example.yukawawebseitebe.services.pinboard.PinboardItemService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,9 +39,15 @@ public class PinboardItemController {
     }
 
     @DeleteMapping("delete/{uuid}")
-    public ResponseEntity<Void> deletePinboardItem(@PathVariable String uuid){
-        pinboardItemService.deletePinboardItem(uuid);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> deletePinboardItem(@PathVariable String uuid) {
+        boolean deleted = pinboardItemService.deletePinboardItem(uuid);
+        if (deleted) {
+            return ResponseEntity.ok("Pinboard-Item " + uuid + " deleted successfully.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Fehler: Pinboard-Item " + uuid + " not found.");
+        }
     }
+
 
 }

@@ -43,7 +43,8 @@ public class PinboardItemService {
             return null;
     }
 
-    public void deletePinboardItem(String uuid) {
+    public boolean deletePinboardItem(String uuid) {
         pinboardItemRepository.deleteById(uuid);
+        return pinboardItemRepository.findById(uuid).isEmpty();
     }
 }
