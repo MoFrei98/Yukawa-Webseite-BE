@@ -37,4 +37,9 @@ public class PinboardItemAttatchmentService {
         } else
             return null;
     }
+
+    public boolean deletePinboardItemAttatchment(String uuid) {
+        pinboardItemAttatchmentRepository.findById(uuid);
+        return pinboardItemAttatchmentRepository.findById(uuid).isEmpty();
+    }
 }
