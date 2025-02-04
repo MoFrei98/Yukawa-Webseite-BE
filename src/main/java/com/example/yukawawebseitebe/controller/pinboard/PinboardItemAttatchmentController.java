@@ -30,13 +30,7 @@ public class PinboardItemAttatchmentController {
 
     @GetMapping("get/item/{uuid}")
     public List<PinboardItemAttachment> getPinboardItemAttatchmentByItemId(@PathVariable(name = "uuid") String uuid){
-        List<PinboardItemAttachment> items = null;
-        try {
-            items = pinboardItemAttatchmentService.getPinboardItemAttatchmentsByItemId(uuid);
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
-        return items;
+        return pinboardItemAttatchmentService.getPinboardItemAttatchmentsByItemId(uuid);
     }
 
     @PostMapping("create")
