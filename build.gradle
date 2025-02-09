@@ -36,7 +36,7 @@ dependencies {
     implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '7.0.0.Beta2'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    runtimeOnly 'com.mysql:mysql-connector-j:9.1.0'
+    implementation 'com.mysql:mysql-connector-j:9.1.0'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
