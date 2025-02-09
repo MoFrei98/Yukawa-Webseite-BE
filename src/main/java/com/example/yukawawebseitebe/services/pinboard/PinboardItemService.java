@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -31,45 +32,14 @@ public class PinboardItemService {
         return pinboardItemRepository.findById(uuid);
     }
 
-    public PinboardItem savePinboardItem(PinboardItem pinboardItem) {
-        pinboardItem.setCreatedAt(LocalDateTime.now());
-        pinboardItem.setCreatedBy(getCurrentUser());
-        for (PinboardItemAttachment attachment : pinboardItem.getAttachments()) {
-            attachment.setPinboardItem(pinboardItem);
-            pinboardItemAttachmentRepository.saveAndFlush(attachment);
         }
         return pinboardItemRepository.saveAndFlush(pinboardItem);
-    }
-
-    public PinboardItem updatePinboardItem(PinboardItem pinboardItem) {
-        Optional<PinboardItem> optionalPinboardItem = pinboardItemRepository.findById(pinboardItem.getUuid());
-        if (optionalPinboardItem.isPresent()) {
-            PinboardItem existingItem = optionalPinboardItem.get();
-            existingItem.setTitle(pinboardItem.getTitle());
-            existingItem.setText(pinboardItem.getText());
-            existingItem.setEditedAt(LocalDateTime.now());
-            existingItem.setEditedBy(getCurrentUser());
-
-            // Aktualisiere Anhänge
-            existingItem.getAttachments().clear();
-            pinboardItem.getAttachments().forEach(attachment -> {
-                attachment.setPinboardItem(existingItem);
-                existingItem.getAttachments().add(attachment);
-                pinboardItemAttachmentRepository.saveAndFlush(attachment);
-            });
-
-            return pinboardItemRepository.saveAndFlush(existingItem);
         } else
-            throw new EntityNotFoundException("Pinboard item not found with uuid: " + pinboardItem.getUuid());
+            return null;
     }
 
-    public void deletePinboardItem(String uuid) {
+    public boolean deletePinboardItem(String uuid) {
         pinboardItemRepository.deleteById(uuid);
-    }
-
-    private String getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication != null ? authentication.getName() : "unknown";
+        return pinboardItemRepository.findById(uuid).isEmpty();
     }
 }
-
