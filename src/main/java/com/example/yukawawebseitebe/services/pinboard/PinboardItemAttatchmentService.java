@@ -31,7 +31,8 @@ public class PinboardItemAttatchmentService {
         if (optionalAttachment.isPresent()) {
             PinboardItemAttachment pinboardItemAttachment = optionalAttachment.get();
             pinboardItemAttachment.setPath(attachment.getPath());
-            pinboardItemAttachment.setType(attachment.getType());
+            pinboardItemAttachment.setPathType(attachment.getPathType());
+            pinboardItemAttachment.setFileType(attachment.getFileType());
             pinboardItemAttachment.setPinboardItem(attachment.getPinboardItem());
             return pinboardItemAttatchmentRepository.saveAndFlush(pinboardItemAttachment);
         } else
