@@ -1,16 +1,10 @@
 package com.example.yukawawebseitebe.services.pinboard;
 
 import com.example.yukawawebseitebe.models.pinboard.PinboardItem;
-import com.example.yukawawebseitebe.models.pinboard.PinboardItemAttachment;
-import com.example.yukawawebseitebe.repositories.pinboard.PinboardItemAttachmentRepository;
 import com.example.yukawawebseitebe.repositories.pinboard.PinboardItemRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -21,9 +15,6 @@ public class PinboardItemService {
     @Autowired
     private PinboardItemRepository pinboardItemRepository;
 
-    @Autowired
-    private PinboardItemAttachmentRepository pinboardItemAttachmentRepository;
-
     public List<PinboardItem> getAllPinboardItems() {
         return pinboardItemRepository.findAll();
     }
@@ -32,8 +23,21 @@ public class PinboardItemService {
         return pinboardItemRepository.findById(uuid);
     }
 
-        }
-        return pinboardItemRepository.saveAndFlush(pinboardItem);
+    public PinboardItem savePinboardItem(PinboardItem item) {
+        item.setCreatedAt(LocalDateTime.now());
+        item.setCreatedBy("test");
+        return pinboardItemRepository.saveAndFlush(item);
+    }
+
+    public PinboardItem updatePinboardItem(PinboardItem item) {
+        Optional<PinboardItem> optionalItem = pinboardItemRepository.findById(item.getUuid());
+        if (optionalItem.isPresent()) {
+            PinboardItem pinboardItem = optionalItem.get();
+            pinboardItem.setTitle(item.getTitle());
+            pinboardItem.setText(item.getText());
+            pinboardItem.setEditedAt(LocalDateTime.now());
+            pinboardItem.setEditedBy("test");
+            return pinboardItemRepository.saveAndFlush(pinboardItem);
         } else
             return null;
     }
