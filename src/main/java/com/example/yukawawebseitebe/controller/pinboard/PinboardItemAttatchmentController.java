@@ -29,7 +29,7 @@ public class PinboardItemAttatchmentController {
     }
 
     @GetMapping("get/item/{uuid}")
-    public List<PinboardItemAttachment> getPinboardItemAttatchmentByItemId(@PathVariable(name = "uuid") String uuid){
+    public List<PinboardItemAttachment> getPinboardItemAttatchmentsByItemId(@PathVariable(name = "uuid") String uuid){
         return pinboardItemAttatchmentService.getPinboardItemAttatchmentsByItemId(uuid);
     }
 

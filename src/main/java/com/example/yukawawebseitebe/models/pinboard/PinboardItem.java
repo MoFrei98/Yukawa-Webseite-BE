@@ -34,6 +34,6 @@ public class PinboardItem {
     @Column(name = "edited_by")
     private String editedBy;
 
-//    @OneToMany(mappedBy = "pinboardItem", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<PinboardItemAttachment> attachments = new ArrayList<>();
+    @OneToMany(mappedBy = "pinboardItem", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PinboardItemAttachment> attachments = new ArrayList<>();
 }
