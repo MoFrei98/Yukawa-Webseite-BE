@@ -19,6 +19,9 @@ public class PinboardItemController {
     @Autowired
     private PinboardItemService pinboardItemService;
 
+    @Autowired
+    private PinboardItemAttatchmentService pinboardItemAttatchmentService;
+
     @GetMapping("/get-all")
     public List<PinboardItem> getAllPinboardItems() {
         return pinboardItemService.getAllPinboardItems();
