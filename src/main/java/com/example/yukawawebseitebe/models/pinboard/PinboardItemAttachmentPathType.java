@@ -1,7 +1,7 @@
 package com.example.yukawawebseitebe.models.pinboard;
 
 public enum PinboardItemAttachmentPathType {
-    URL("Image"),
+    URL("URL"),
     FILE_PATH("File Path");;
 
     private final String typeName;
