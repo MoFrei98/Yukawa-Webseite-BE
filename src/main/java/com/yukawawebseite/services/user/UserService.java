@@ -53,4 +53,7 @@ public class UserService {
         userRepository.deleteById(uuid);
     }
 
+    public Optional<User> login(User user) {
+        return null;
+    }
 }
