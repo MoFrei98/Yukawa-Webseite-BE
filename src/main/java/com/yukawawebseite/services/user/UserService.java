@@ -1,10 +1,15 @@
 package com.yukawawebseite.services.user;
 
 import com.yukawawebseite.models.user.User;
+import com.yukawawebseite.models.user.UserRole;
 import com.yukawawebseite.repositories.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +19,8 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
@@ -22,6 +29,7 @@ public class UserService {
         return userRepository.findById(uuid);
     }
 
+    /*
     public User saveUser(User user) {
         Optional<User> optionalUser = userRepository.findByFirstNameAndLastNameAndEmail(user.getFirstName(), user.getLastName(), user.getEmail());
         if (optionalUser.isPresent()) {
@@ -33,6 +41,7 @@ public class UserService {
         } else
             return null;
     }
+     */
 
     public User updateUser(User updatedUser) {
         Optional<User> optionalUser = userRepository.findById(updatedUser.uuid);
@@ -53,7 +62,25 @@ public class UserService {
         userRepository.deleteById(uuid);
     }
 
-    public Optional<User> login(User user) {
-        return null;
+    public Optional<User> login(String username, String password) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        if (userOptional.isPresent() && passwordEncoder.matches(password, userOptional.get().getPassword())) {
+            User user = userOptional.get();
+            user.setLastLogin(LocalDateTime.now());
+            userRepository.saveAndFlush(user);
+            return userOptional;
+        }
+        return Optional.empty();
+    }
+
+    public User register(String username, String password, String firstname, String lastname) {
+        String hashedPassword = passwordEncoder.encode(password);
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(hashedPassword);
+        user.setFirstName(firstname);
+        user.setLastName(lastname);
+        user.setCreatedAt(LocalDateTime.now());
+        return userRepository.saveAndFlush(user);
     }
 }

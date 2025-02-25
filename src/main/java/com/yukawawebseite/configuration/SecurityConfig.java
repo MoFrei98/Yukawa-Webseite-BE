@@ -3,6 +3,7 @@ package com.yukawawebseite.configuration;
 import com.yukawawebseite.configuration.jwt.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -37,7 +38,7 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/login").permitAll()
+                .requestMatchers(HttpMethod.POST, "/users/register", "/users/login").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class);

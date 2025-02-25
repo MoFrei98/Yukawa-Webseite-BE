@@ -32,20 +32,18 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody User user) {
-        Optional<User> userOptional = userService.login(user);
-
+        Optional<User> userOptional = userService.login(user.getUsername(), user.getPassword());
         if (userOptional.isPresent()) {
-            String token = JwtUtil.generateToken(userOptional.get().getUsername());
+            User loggedInUser = userOptional.get();
+            String token = JwtUtil.generateToken(loggedInUser.getUsername());
             return ResponseEntity.ok(new AuthResponse(token));
         }
-
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login fehlgeschlagen");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed");
     }
 
-
-    @PostMapping("/create")
-    public User createUser(@RequestBody User user) {
-        return userService.saveUser(user);
+    @PostMapping("/register")
+    public User registerUser(@RequestBody User user) {
+        return userService.register(user.getUsername(), user.getPassword(), user.getFirstName(), user.getLastName());
     }
 
     @PutMapping("/update")

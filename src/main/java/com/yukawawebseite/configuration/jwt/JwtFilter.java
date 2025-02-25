@@ -11,6 +11,15 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+
+        // Endpunkte, die ohne Token zugänglich sein sollen
+        String path = request.getRequestURI();
+        if (path.equals("/users/register") || path.equals("/users/login")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // Token-Validierung
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
