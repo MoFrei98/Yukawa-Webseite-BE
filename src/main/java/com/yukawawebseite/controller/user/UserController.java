@@ -10,9 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/users")
 public class UserController {
 
@@ -32,13 +34,20 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody User user) {
-        Optional<User> userOptional = userService.login(user.getUsername(), user.getPassword());
-        if (userOptional.isPresent()) {
-            User loggedInUser = userOptional.get();
-            String token = JwtUtil.generateToken(loggedInUser.getUsername());
-            return ResponseEntity.ok(new AuthResponse(token));
+        try {
+            User loggedInUser = userService.login(user.getUsername(), user.getPassword());
+            if (loggedInUser != null) {
+                String token = JwtUtil.generateToken(loggedInUser.getUsername());
+                return ResponseEntity.ok(new AuthResponse(token));
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Login failed"));
+            }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Exception: " + e.getMessage()));
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login failed");
     }
 
     @PostMapping("/register")

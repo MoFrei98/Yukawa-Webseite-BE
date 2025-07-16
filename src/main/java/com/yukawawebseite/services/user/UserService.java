@@ -62,15 +62,14 @@ public class UserService {
         userRepository.deleteById(uuid);
     }
 
-    public Optional<User> login(String username, String password) {
+    public User login(String username, String password) {
         Optional<User> userOptional = userRepository.findByUsername(username);
         if (userOptional.isPresent() && passwordEncoder.matches(password, userOptional.get().getPassword())) {
             User user = userOptional.get();
             user.setLastLogin(LocalDateTime.now());
-            userRepository.saveAndFlush(user);
-            return userOptional;
-        }
-        return Optional.empty();
+            return userRepository.saveAndFlush(user);
+        } else
+            return null;
     }
 
     public User register(String username, String password, String firstname, String lastname) {
