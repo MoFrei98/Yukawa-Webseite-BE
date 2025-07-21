@@ -29,6 +29,10 @@ public class UserService {
         return userRepository.findById(uuid);
     }
 
+    public boolean userHasRole(String uuid, String roleName) {
+        return userRepository.userHasRole(uuid, roleName);
+    }
+
     /*
     public User saveUser(User user) {
         Optional<User> optionalUser = userRepository.findByFirstNameAndLastNameAndEmail(user.getFirstName(), user.getLastName(), user.getEmail());
