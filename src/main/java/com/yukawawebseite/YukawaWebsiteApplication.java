@@ -11,5 +11,4 @@ public class YukawaWebsiteApplication {
 
         System.out.println("--- LAUNCHED YUKAWA WEBSITE ---");
     }
-
 }

@@ -5,7 +5,11 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import java.io.IOException;
+import java.util.Collections;
 
 public class JwtFilter extends OncePerRequestFilter {
     @Override
@@ -35,7 +39,9 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
 
-        // Optional: Hier kannst du den Benutzerkontext setzen
+        // Set authenticated user in context
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, null, Collections.emptyList());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         filterChain.doFilter(request, response);
     }

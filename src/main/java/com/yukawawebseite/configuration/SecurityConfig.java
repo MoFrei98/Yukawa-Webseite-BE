@@ -38,7 +38,9 @@ public class SecurityConfig {
         return http.csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authz -> authz
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/users/register", "/users/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/pinboard-items/get-all", "/pinboard-items/get/**").permitAll()
                         .anyRequest().authenticated()
                 ).cors(Customizer.withDefaults())
                 .addFilterBefore(new JwtFilter(), UsernamePasswordAuthenticationFilter.class)
