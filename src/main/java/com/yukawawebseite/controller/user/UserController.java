@@ -36,11 +36,18 @@ public class UserController {
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/has-role/{uuid}/{roleName}")
-    public ResponseEntity<Boolean> hasUserRole(@PathVariable String uuid, @PathVariable String roleName) {
+    @GetMapping("/has-role/{userName}/{roleName}")
+    public ResponseEntity<Boolean> hasUserRole(@PathVariable String userName, @PathVariable String roleName) {
         try {
-            boolean hasRole = userRepository.userHasRole(uuid, roleName);
-            return ResponseEntity.ok(hasRole);
+            Optional<User> userOptional = userRepository.findByUsername(userName);
+            if (userOptional.isPresent()) {
+                User user = userOptional.get();
+                final String uuid = user.getUuid();
+                boolean hasRole = userRepository.userHasRole(uuid, roleName);
+                return ResponseEntity.ok(hasRole);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
+            }
         } catch (Exception e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
