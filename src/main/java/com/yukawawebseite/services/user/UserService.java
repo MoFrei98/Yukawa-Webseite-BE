@@ -3,6 +3,7 @@ package com.yukawawebseite.services.user;
 import com.yukawawebseite.models.user.User;
 import com.yukawawebseite.models.user.UserRole;
 import com.yukawawebseite.repositories.user.UserRepository;
+import com.yukawawebseite.repositories.user.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +19,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserRoleRepository userRoleRepository;
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -51,15 +55,30 @@ public class UserService {
         Optional<User> optionalUser = userRepository.findById(updatedUser.uuid);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            user.setRole(updatedUser.getRole());
-            user.setFirstName(updatedUser.getFirstName());
-            user.setLastName(updatedUser.getLastName());
-            user.setEmail(updatedUser.getEmail());
-            user.setPassword(updatedUser.getPassword());
-            user.setLastLogin(updatedUser.getLastLogin());
+
+            if (updatedUser.getRole() != null && !updatedUser.getRole().equals(user.getRole())) {
+                user.setRole(updatedUser.getRole());
+            }
+            if (updatedUser.getFirstName() != null && !updatedUser.getFirstName().equals(user.getFirstName())) {
+                user.setFirstName(updatedUser.getFirstName());
+            }
+            if (updatedUser.getLastName() != null && !updatedUser.getLastName().equals(user.getLastName())) {
+                user.setLastName(updatedUser.getLastName());
+            }
+            if (updatedUser.getEmail() != null && !updatedUser.getEmail().equals(user.getEmail())) {
+                user.setEmail(updatedUser.getEmail());
+            }
+            if (updatedUser.getPassword() != null && !updatedUser.getPassword().equals(user.getPassword())) {
+                user.setPassword(updatedUser.getPassword());
+            }
+            if (updatedUser.getLastLogin() != null && !updatedUser.getLastLogin().equals(user.getLastLogin())) {
+                user.setLastLogin(updatedUser.getLastLogin());
+            }
+
             return userRepository.saveAndFlush(user);
-        } else
+        } else {
             return null;
+        }
     }
 
     public void deleteUser(String uuid) {
@@ -83,7 +102,12 @@ public class UserService {
         user.setPassword(hashedPassword);
         user.setFirstName(firstname);
         user.setLastName(lastname);
+        user.setRole(userRoleRepository.findByRoleName("DEFAULT_USER").orElseThrow(() -> new RuntimeException("User role not found")));
         user.setCreatedAt(LocalDateTime.now());
         return userRepository.saveAndFlush(user);
+    }
+
+    public Optional<User> getUserByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }

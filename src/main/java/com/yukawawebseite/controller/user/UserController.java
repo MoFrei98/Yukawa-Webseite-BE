@@ -3,7 +3,9 @@ package com.yukawawebseite.controller.user;
 import com.yukawawebseite.configuration.jwt.AuthResponse;
 import com.yukawawebseite.configuration.jwt.JwtUtil;
 import com.yukawawebseite.models.user.User;
+import com.yukawawebseite.models.user.UserRole;
 import com.yukawawebseite.repositories.user.UserRepository;
+import com.yukawawebseite.repositories.user.UserRoleRepository;
 import com.yukawawebseite.services.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,14 +27,28 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserRoleRepository userRoleRepository;
+
     @GetMapping("/get-all")
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/get/{uuid}")
+    @GetMapping("/roles/get-all")
+    public List<UserRole> getAllUserRoles() {
+        return userRoleRepository.findAll();
+    }
+
+    @GetMapping("/get/id/{uuid}")
     public ResponseEntity<User> getUserById(@PathVariable String uuid) {
         Optional<User> user = userService.getUserById(uuid);
+        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/get/username/{username}")
+    public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
+        Optional<User> user = userService.getUserByUsername(username);
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
