@@ -102,7 +102,7 @@ public class UserService {
         user.setPassword(hashedPassword);
         user.setFirstName(firstname);
         user.setLastName(lastname);
-        user.setRole(userRoleRepository.findByRoleName("DEFAULT_USER").orElseThrow(() -> new RuntimeException("User role not found")));
+        user.setRole(userRoleRepository.findByName("DEFAULT_USER").orElseThrow(() -> new RuntimeException("User role not found")));
         user.setCreatedAt(LocalDateTime.now());
         return userRepository.saveAndFlush(user);
     }
